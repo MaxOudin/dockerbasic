@@ -1,11 +1,14 @@
-# dockerbasic
-Basic files to implement Docker
-
-
 ### Building and running your application
 
 When you're ready, start your application by running:
 `docker compose up --build`.
+
+### Create your DB
+
+docker-compose run app rake db:create
+docker-compose run app rake db:migrate
+docker-compose run app rake db:seed
+
 
 ### Deploying your application to the cloud
 
@@ -19,3 +22,14 @@ Then, push it to your registry, e.g. `docker push myregistry.com/myapp`.
 
 Consult Docker's [getting started](https://docs.docker.com/go/get-started-sharing/)
 docs for more detail on building and pushing.
+
+
+### If you need to stop / start
+docker-compose down
+docker-compose up
+
+docker-compose logs -f
+
+
+### Access website on your browser
+http://localhost:3000
