@@ -5,8 +5,8 @@ When you're ready, start your application by running:
 
 ### Create your DB
 
-docker-compose run app rake db:create
-docker-compose run app rake db:migrate
+docker-compose run app rake db:create \
+docker-compose run app rake db:migrate \
 docker-compose run app rake db:seed
 
 
@@ -25,8 +25,8 @@ docs for more detail on building and pushing.
 
 
 ### If you need to stop / start
-docker-compose down
-docker-compose up
+docker-compose down \
+docker-compose up 
 
 docker-compose logs -f
 
