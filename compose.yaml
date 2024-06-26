@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  # Définition du service principal de l'application Rails
+  app:
+    build:
+      # Le contexte de construction spécifie le répertoire actuel, où se trouve le Dockerfile
+      context: .
+      # Nom du Dockerfile utilisé pour construire l'image de l'application
+      dockerfile: Dockerfile
+    ports:
+      # Mappage du port 3000 du conteneur au port 3000 de l'hôte
+      - "3000:3000"
+    depends_on:
+      # Dépendance envers le service de base de données
+      - db
+    environment:
+      # Variable d'environnement pour la configuration de la base de données
+      DATABASE_URL: postgres://postgres:password@db:5432/example
+    volumes:
+      # Montage du répertoire de l'application dans le conteneur pour faciliter le développement
+      - .:/myapp
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -b '0.0.0.0'"
+    # Cette commande :
+    # 1. Supprime le fichier server.pid s'il existe (pour éviter les conflits si le serveur a planté précédemment).
+    # 2. Démarre le serveur Rails sur toutes les interfaces réseau pour qu'il soit accessible de l'extérieur du conteneur.
+
+  # Définition du service de base de données PostgreSQL
+  db:
+    # Utilisation de l'image officielle de PostgreSQL, version 13
+    image: postgres:13
+    volumes:
+      # Montage d'un volume pour persister les données de la base de données entre les redémarrages
+      - db-data:/var/lib/postgresql/data
+    environment:
+      # Variables d'environnement pour configurer PostgreSQL
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: example
+
+# Définition d'un volume nommé pour persister les données de PostgreSQL
+volumes:
+  db-data:
