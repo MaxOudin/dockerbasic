@@ -3,7 +3,14 @@
 ################################################################################
 # Pick a base image to serve as the foundation for the other build stages in
 # this file.
-#
+
+# Set production environment
+# ENV RAILS_ENV="production" \
+    # BUNDLE_DEPLOYMENT="1" \
+    # BUNDLE_PATH="/usr/local/bundle" \
+    # BUNDLE_WITHOUT="development"
+
+
 # For illustrative purposes, the following FROM command
 # is using the alpine image (see https://hub.docker.com/_/alpine).
 # By specifying the "latest" tag, it will also use whatever happens to be the
@@ -49,10 +56,26 @@ RUN apt-get update -qq && apt-get install -y build-essential libpq-dev nodejs
 RUN mkdir /myapp
 WORKDIR /myapp
 
+## Install JavaScript dependencies
+# ARG NODE_VERSION=20.5.1
+# ARG YARN_VERSION=1.22.19
+# ENV PATH=/usr/local/node/bin:$PATH
+# RUN curl -sL https://github.com/nodenv/node-build/archive/master.tar.gz | tar xz -C /tmp/ && \
+    # /tmp/node-build-master/bin/node-build "${NODE_VERSION}" /usr/local/node && \
+    # npm install -g yarn@$YARN_VERSION && \
+    # rm -rf /tmp/node-build-master
+
+
 # Copie des fichiers Gemfile et Gemfile.lock pour installer les gems.
 COPY Gemfile /myapp/Gemfile
 COPY Gemfile.lock /myapp/Gemfile.lock
 RUN bundle install
+
+
+## Install node modules
+# COPY package.json yarn.lock ./
+# RUN yarn install --frozen-lockfile
+
 
 # Copie de l'ensemble du projet dans le répertoire de travail.
 COPY . /myapp
